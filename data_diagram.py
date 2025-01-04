@@ -1,19 +1,7 @@
-from re import X
-from fastapi import FastAPI
-from fastapi.responses import HTMLResponse
-from pydantic import BaseModel
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
-from fastapi import HTTPException
-from sklearn.linear_model import Lasso
-from sklearn.ensemble import BaggingRegressor
-from sklearn.model_selection import train_test_split
-from sklearn.neural_network import MLPRegressor
-from sklearn.metrics import mean_squared_error, r2_score
-import numpy as np
 
-app = FastAPI()
 
 # Đọc dữ liệu từ file CSV
 df = pd.read_csv("gold_price_data.csv")
@@ -22,7 +10,7 @@ df.columns = ["Date", "Price", "Open", "High", "Low", "Vol.", "Change %"]
 # Tiền xử lý dữ liệu
 def preprocess_data(df):
     # Xóa các dòng chứa giá trị thiếu
-    df = df.dropna(inplace=True)
+    df = df.dropna()
 
     # Chuyển cột 'Date' sang kiểu dữ liệu datetime và sắp xếp dữ liệu theo thời gian
     df['Date'] = pd.to_datetime(df['Date'])
