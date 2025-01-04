@@ -1,5 +1,7 @@
 pandas
 numpy
-sklearn
 datetime
 matplotlib
+pydantic
+fastapi
+uvicorn
