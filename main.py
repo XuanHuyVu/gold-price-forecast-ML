@@ -42,8 +42,8 @@ def preprocess_data(df):
     df['Vol.'] = pd.to_numeric(df['Vol.'].replace({',': '', 'K': ''}, regex=True), errors='coerce') * 1000
     df['Change %'] = pd.to_numeric(df['Change %'].replace({'%': ''}, regex=True), errors='coerce') / 100
 
-    df = df.dropna()
-    df['DayOfYear'] = df['Date'].dt.dayofyear
+    df = df.dropna() # làm sạch lại dữ liệu
+    df['DayOfYear'] = df['Date'].dt.dayofyear # thêm cột ngày trong năm
     return df.sort_values('Date')
 
 # Preprocess data
@@ -61,16 +61,20 @@ X_scaled = scaler.fit_transform(X)
 X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
 
 # Initialize and train models
+# Linear Regression
 linear_model = LinearRegression()
 linear_model.fit(X_train, y_train)
 
+# Lasso Regression
 lasso_model = Lasso(alpha=0.1, max_iter=1000)
 lasso_model.fit(X_train, y_train)
 
+# Neural Network
 neural_model = MLPRegressor(hidden_layer_sizes=(64, 32), max_iter=1000, activation='relu', 
                           solver='adam', random_state=42)
 neural_model.fit(X_train, y_train)
 
+# Bagging
 base_estimator = MLPRegressor(hidden_layer_sizes=(64, 32), max_iter=1000, random_state=42)
 bagging_model = BaggingRegressor(estimator=base_estimator, n_estimators=10, random_state=42)
 bagging_model.fit(X_train, y_train)
@@ -80,6 +84,7 @@ def predict_with_model(model, inputs):
     scaled_inputs = scaler.transform([inputs])
     return model.predict(scaled_inputs)[0]
 
+# Combined prediction
 def predict_combined(inputs):
     predictions = [
         predict_with_model(model, inputs)
